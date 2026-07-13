@@ -1,18 +1,43 @@
-# Salesforce DX Project: Next Steps
+# Salesforce Initial Project - Account Cards CRUD
 
-Now that you’ve created a Salesforce DX project, what’s next? Here are some documentation resources to get you started.
+Projeto inicial de Salesforce Development utilizando **LWC + Apex**, com foco em construção de um componente para gerenciamento de registros de **Account**.
 
-## How Do You Plan to Deploy Your Changes?
+O projeto implementa um CRUD completo de contas, permitindo buscar, criar, editar, deletar, visualizar detalhes e filtrar registros diretamente pela interface do Lightning Web Component.
 
-Do you want to deploy a set of changes, or create a self-contained application? Choose a [development model](https://developer.salesforce.com/tools/vscode/en/user-guide/development-models).
+## Objetivo do projeto
 
-## Configure Your Salesforce DX Project
+O objetivo principal foi praticar os fundamentos de desenvolvimento Salesforce, conectando um componente LWC a uma classe Apex para manipular registros reais da org.
 
-The `sfdx-project.json` file contains useful configuration information for your project. See [Salesforce DX Project Configuration](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ws_config.htm) in the _Salesforce DX Developer Guide_ for details about this file.
+Este projeto cobre conceitos importantes como:
 
-## Read All About It
+- Lightning Web Components
+- Apex Controller
+- SOQL
+- `@AuraEnabled`
+- `@wire`
+- Apex imperativo
+- Insert, Update e Delete de registros
+- Renderização dinâmica no HTML
+- Filtros com JavaScript
+- Modais com SLDS
+- Testes Apex
+- Deploy via Salesforce CLI
+- Versionamento com Git e GitHub
 
-- [Salesforce Extensions Documentation](https://developer.salesforce.com/tools/vscode/)
-- [Salesforce CLI Setup Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_intro.htm)
-- [Salesforce DX Developer Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_intro.htm)
-- [Salesforce CLI Command Reference](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference.htm)
+## Funcionalidades
+
+### Buscar Accounts
+
+O componente busca registros reais de Account na org utilizando Apex e `@wire`.
+
+```js
+@wire(getAccounts)
+wiredAccounts({ data, error }) {
+  if (data) {
+    this.accounts = data.map(acc => this.mapAccount(acc));
+    this.error = undefined;
+  } else if (error) {
+    this.error = error;
+    this.accounts = [];
+  }
+}
