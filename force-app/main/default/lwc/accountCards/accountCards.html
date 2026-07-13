@@ -1,0 +1,234 @@
+<template>
+    <lightning-card title="Accounts">
+        <div class="slds-p-around_medium">
+
+            <template if:true={message}>
+                <p class="slds-m-bottom_small">{message}</p>
+            </template>
+
+            <lightning-input
+                label="Nome da Conta"
+                onchange={handleSearch}
+                value={filterName}>
+            </lightning-input>
+
+            <div class="slds-m-top_small slds-m-bottom_medium">
+                <lightning-button label="All" value="All" onclick={filteredAcc}></lightning-button>
+                <lightning-button label="Healthy" value="Healthy" onclick={filteredAcc}></lightning-button>
+                <lightning-button label="Attention" value="Attention" onclick={filteredAcc}></lightning-button>
+                <lightning-button label="Critical" value="Critical" onclick={filteredAcc}></lightning-button>
+            </div>
+
+            <template for:each={accsFilter} for:item="acc">
+                <div key={acc.id} class="slds-box slds-m-bottom_small"> 
+                    <strong>Name:</strong> {acc.name} <br>
+                    <strong>Industry:</strong> {acc.industry} <br>
+                    <strong>Annual Revenue:</strong> {acc.annualRevenue} <br>
+                    <strong>Status:</strong> {acc.status} <br>
+                    <strong>Phone:</strong> {acc.phone} <br>
+                    <strong>Id:</strong> {acc.id} <br>
+
+                    <div class="slds-m-top_small">
+                        <lightning-button
+                            label="Ver Detalhes"
+                            data-id={acc.id}
+                            onclick={handleDetails}>
+                        </lightning-button>
+
+                        <lightning-button
+                            label="Editar"
+                            variant="brand"
+                            data-id={acc.id}
+                            onclick={handleEditAccount}>
+                        </lightning-button>
+
+                        <lightning-button
+                            label="Deletar"
+                            variant="destructive"
+                            data-id={acc.id}
+                            onclick={deleteAccounts}>
+                        </lightning-button>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Modal de detalhes -->
+            <template if:true={isModalOpen}>
+                <section
+                    role="dialog"
+                    tabindex="-1"
+                    aria-modal="true"
+                    class="slds-modal slds-fade-in-open">
+
+                    <div class="slds-modal__container">
+
+                        <header class="slds-modal__header">
+                            <button
+                                class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                                title="Close"
+                                onclick={hideModal}>
+
+                                <lightning-icon
+                                    icon-name="utility:close"
+                                    alternative-text="close"
+                                    variant="inverse"
+                                    size="small">
+                                </lightning-icon>
+
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+
+                            <h2 class="slds-text-heading_medium slds-hyphenate">
+                                {selectedAccount.name}
+                            </h2>
+                        </header>
+
+                        <div class="slds-modal__content slds-p-around_medium">
+                            Industry: {selectedAccount.industry} <br>
+                            Annual Revenue: {selectedAccount.annualRevenue} <br>
+                            Status: {selectedAccount.status} <br>
+                            Phone: {selectedAccount.phone}
+                        </div>
+
+                        <footer class="slds-modal__footer">    
+                            <lightning-button
+                                variant="brand"
+                                label="Fechar"
+                                onclick={hideModal}>
+                            </lightning-button>
+                        </footer>
+                    </div>
+                </section>
+
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </template>
+
+            <!-- Modal de edição -->
+            <template if:true={isEditModalOpen}>
+                <section
+                    role="dialog"
+                    tabindex="-1"
+                    aria-modal="true"
+                    class="slds-modal slds-fade-in-open">
+
+                    <div class="slds-modal__container">
+
+                        <header class="slds-modal__header">
+                            <button
+                                class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                                title="Close"
+                                onclick={hideEditModal}>
+
+                                <lightning-icon
+                                    icon-name="utility:close"
+                                    alternative-text="close"
+                                    variant="inverse"
+                                    size="small">
+                                </lightning-icon>
+
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+
+                            <h2 class="slds-text-heading_medium slds-hyphenate">
+                                Editar {editingAccount.name}
+                            </h2>
+                        </header>
+
+                        <div class="slds-modal__content slds-p-around_medium">
+
+                            <lightning-input
+                                label="Name"
+                                name="name"
+                                value={editingAccount.name}
+                                onchange={handleEditInputChange}>
+                            </lightning-input>
+
+                            <lightning-input
+                                label="Industry"
+                                name="industry"
+                                value={editingAccount.industry}
+                                onchange={handleEditInputChange}>
+                            </lightning-input>
+
+                            <lightning-input
+                                label="Annual Revenue"
+                                type="number"
+                                name="annualRevenue"
+                                value={editingAccount.annualRevenue}
+                                onchange={handleEditInputChange}>
+                            </lightning-input>
+
+                            <lightning-input
+                                label="Phone"
+                                name="phone"
+                                value={editingAccount.phone}
+                                onchange={handleEditInputChange}>
+                            </lightning-input>
+
+                        </div>
+
+                        <footer class="slds-modal__footer">
+                            <lightning-button
+                                label="Cancelar"
+                                onclick={hideEditModal}>
+                            </lightning-button>
+
+                            <lightning-button
+                                variant="brand"
+                                label="Salvar"
+                                onclick={handleSaveEdit}>
+                            </lightning-button>
+                        </footer>
+                    </div>
+                </section>
+
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </template>
+
+            <!-- Formulário de criação -->
+            <div class="slds-box slds-m-top_large">
+                <h2 class="slds-text-heading_small slds-m-bottom_small">
+                    Criar nova Account
+                </h2>
+
+                <lightning-input
+                    label="Name"
+                    value={newAccountName}
+                    name="newAccountName"
+                    onchange={handleAccountsNew}>
+                </lightning-input>
+
+                <lightning-input
+                    label="Industry"
+                    value={newAccountIndustry}
+                    name="newAccountIndustry"
+                    onchange={handleAccountsNew}>
+                </lightning-input>
+
+                <lightning-input
+                    label="Annual Revenue"
+                    type="number"
+                    value={newAccountAnnualRevenue}
+                    name="newAccountAnnualRevenue"
+                    onchange={handleAccountsNew}>
+                </lightning-input>
+
+                <lightning-input
+                    label="Phone"
+                    value={newAccountPhone}
+                    name="newAccountPhone"
+                    onchange={handleAccountsNew}>
+                </lightning-input>
+
+                <div class="slds-m-top_small">
+                    <lightning-button
+                        label="Adicionar Nova Conta"
+                        variant="brand"
+                        onclick={handleCreateAccount}>
+                    </lightning-button>
+                </div>
+            </div>
+
+        </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,61 @@
+<template>
+    <lightning-card title="Todo List">
+        <div class="teste">
+            <div>
+                <lightning-button label="Todas" value="all" onclick={filtered}></lightning-button>
+                <lightning-button label="DONE" value="true" onclick={filtered}></lightning-button>
+                <lightning-button label="Pendente" value="false" onclick={filtered}></lightning-button>
+            </div>
+
+            <template for:each={filteredTasks} for:item="task">
+                <div key={task.id} class="aaa">
+                    Task: {task.toDo} <br>
+                    Id: {task.id} <br>
+
+                    <template lwc:if={task.done}>
+                        Status: Feito
+                    </template>
+
+                    <template lwc:else>
+                        Status: Pendente
+                    </template>
+
+                    <br>
+
+                    <lightning-button
+                        data-id={task.id}
+                        onclick={removerTask}
+                        title="Remover"
+                        label="Remover">
+                    </lightning-button>
+
+                    <lightning-input 
+                        type="toggle" 
+                        label="Feature Status"
+                        checked={task.done}
+                        message-toggle-active="Feito"
+                        message-toggle-inactive="Pendente"
+                        onchange={mudarStatus}
+                        data-id={task.id}>
+                    </lightning-input>
+                </div>
+            </template>
+            <template lwc:if={hasNoTasks}>
+                <p>Nenhuma task encontrada.</p>
+            </template>
+
+            <div>
+                <lightning-input
+                    label="Adicionar nova Task:"
+                    onchange={novaTask}
+                    value={tasknova}>
+                </lightning-input>
+
+                <lightning-button
+                    label="Add"
+                    onclick={addTask}>
+                </lightning-button>
+            </div>
+        </div>
+    </lightning-card>
+</template> 

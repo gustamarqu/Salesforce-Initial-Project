@@ -1,0 +1,38 @@
+:host {
+    display: block;
+}
+
+.teste {
+    border: 1px solid #000000;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+    background: rgb(255, 255, 255);
+}
+
+
+.form-area {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.slds-modal__container {
+    max-width: 520px;
+}
+
+.slds-modal__header {
+    background: #032d60;
+    color: white;
+    border-radius: 6px 6px 0 0;
+}
+
+.slds-modal__content {
+    background: #f8fafc;
+}
+
+.slds-modal__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
